@@ -25,7 +25,7 @@ public class UserController {
     @GetMapping
     public Page<User> getAllUsers(@RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "10") int size,
-                                  @RequestParam(defaultValue = "id") String sortBy){
+                                  @RequestParam(defaultValue = "name") String sortBy){
         return userService.getAllUsers(page,size,sortBy);
     }
 

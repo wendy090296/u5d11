@@ -17,20 +17,25 @@ public class User {
     @Id
     @GeneratedValue
     @Setter(AccessLevel.NONE)
-    private UUID ID;
+    private UUID id;
     private String username;
     private String name;
     private String surname;
     private String email;
+    @JsonIgnore
+    private String password;
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Device> devices;
 
-    public User( String username, String name, String surname, String email) {
+    public User(String username, String name, String surname, String email,String password) {
         this.username = username;
         this.name = name;
         this.surname = surname;
         this.email = email;
+        this.password = password;
 
     }
+
+
 }

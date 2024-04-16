@@ -43,7 +43,7 @@ public class UserService {
         // 1. Se l'email dello user non é presente,
         if (!userDAO.existsByEmail(body.email())) {
             // 2. creo un nuovo oggetto User "modellato" sul body
-            User newUser = new User(body.name(), body.surname(), body.username(), body.email());
+            User newUser = new User(body.name(), body.surname(), body.username(), body.email(),body.password());
             return userDAO.save(newUser);
             // Se é già presente, lancio eccezione :
         } else throw new BadRequestException("User with email '" + body.email() + "  already exists.");
@@ -67,6 +67,10 @@ public class UserService {
     public void deleteUser(UUID userId){
         User found = this.getUserById(userId);
         userDAO.delete(found);
+    }
+
+    public User findByEmail(String email){
+        return userDAO.findByEmail(email).orElseThrow(()-> new NotFoundException("User with email " + email + " not found!"));
     }
 
 

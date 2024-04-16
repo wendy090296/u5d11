@@ -17,5 +17,8 @@ public record UserDTO(@NotEmpty(message = "The name field is mandatory.")
                       String username,
                       @Email(message = "Invalid email format.")
                       @NotEmpty(message = "The email field is mandatory.")
-                      String email) {
+                      String email,
+                      @NotEmpty(message = "Password field must not be empty.")
+                      @Size(min = 8, message = "Password must be at least 8 characters long.")
+                      String password) {
 }

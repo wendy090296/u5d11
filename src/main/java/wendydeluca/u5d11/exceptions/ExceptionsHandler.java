@@ -25,9 +25,15 @@ public class ExceptionsHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND) //401
+    @ResponseStatus(HttpStatus.NOT_FOUND) //404
     public ErrorResponseDTO handleNotFound(NotFoundException ex) {
         return new ErrorResponseDTO(ex.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED) //401
+    public ErrorResponseDTO handleUnauthorized(UnauthorizedException ex){
+        return new ErrorResponseDTO((ex.getMessage()),LocalDateTime.now());
     }
 
     @ExceptionHandler(Exception.class)
