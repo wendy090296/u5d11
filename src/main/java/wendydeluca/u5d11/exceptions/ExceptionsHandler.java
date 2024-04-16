@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import wendydeluca.u5d11.payloads.ErrorResponseDTO;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,12 @@ public class ExceptionsHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED) //401
     public ErrorResponseDTO handleUnauthorized(UnauthorizedException ex){
         return new ErrorResponseDTO((ex.getMessage()),LocalDateTime.now());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN) //403
+    public ErrorResponseDTO handleForbidden(AccessDeniedException ex){
+        return new ErrorResponseDTO(("You cannot access this functionality!"),LocalDateTime.now());
     }
 
     @ExceptionHandler(Exception.class)

@@ -3,6 +3,8 @@ package wendydeluca.u5d11.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,29 +25,38 @@ public class UserController {
     public UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')") // concedo solo all'admin di visionare la lista utenti
     public Page<User> getAllUsers(@RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "10") int size,
                                   @RequestParam(defaultValue = "name") String sortBy){
         return userService.getAllUsers(page,size,sortBy);
     }
 
-    @PostMapping //SAVE
-    @ResponseStatus(HttpStatus.CREATED) //STATUS 201 OK
-    public User saveUser(@RequestBody @Validated UserDTO body, BindingResult validation){
-        if(validation.hasErrors()){
-            System.out.println(validation.getAllErrors());
-            throw new BadRequestException(validation.getAllErrors());
-        }
-        return userService.saveUser(body);
+    @GetMapping("/me")
+    public User getProfile(@AuthenticationPrincipal User currentAuthUser){
+        return currentAuthUser;
     }
 
-    @GetMapping("/{userId}") //GET BY ID
+    @PutMapping("/me")
+    public User updateProfile(@AuthenticationPrincipal User currentAuthUser, @RequestBody UserDTO updateUser){
+        return this.userService.updateUser(currentAuthUser.getId(),updateUser);
+    }
+
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProfile(@AuthenticationPrincipal User currentAuthUser){
+        this.userService.deleteUser(currentAuthUser.getId());
+    }
+
+
+
+    @GetMapping("/{userId}")
     public User findUserById(@PathVariable UUID userId){
         return userService.getUserById(userId);
 
     }
 
-    @PutMapping("/{userId}") // UPDATING 1
+    @PutMapping("/{userId}")
     public User findUserByIdAndUpdate(@PathVariable UUID userId, @RequestBody @Validated UserDTO body, BindingResult validation){
         if(validation.hasErrors()){
             System.out.println(validation.getAllErrors());
@@ -56,7 +67,7 @@ public class UserController {
 
 
 
-    @DeleteMapping("/{userId}") // DELETE by id
+    @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable UUID userId){
         userService.deleteUser(userId);
 

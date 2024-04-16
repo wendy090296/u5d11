@@ -43,7 +43,7 @@ public class UserService {
         // 1. Se l'email dello user non é presente,
         if (!userDAO.existsByEmail(body.email())) {
             // 2. creo un nuovo oggetto User "modellato" sul body
-            User newUser = new User(body.name(), body.surname(), body.username(), body.email(),body.password());
+            User newUser = new User(body.name(), body.surname(), body.username(), body.email(),body.password(),"https://ui-avatars.com/api/?name="+ body.name() + "+" + body.surname());
             return userDAO.save(newUser);
             // Se é già presente, lancio eccezione :
         } else throw new BadRequestException("User with email '" + body.email() + "  already exists.");
