@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -26,5 +28,11 @@ public class Config {
 
         return httpSecurity.build();// ritorno un oggetto di tipo SecurityFilterChain
 
+    }
+
+    @Bean
+    PasswordEncoder  getBCrypt(){
+        return new BCryptPasswordEncoder(11);
+        // lo utilizzo in fase di registrazione e login, x cui, vado a crearmi il riferimento in UserService
     }
 }
